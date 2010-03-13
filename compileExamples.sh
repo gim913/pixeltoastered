@@ -19,3 +19,6 @@ g++ -O3 examples/TrueColor.o PixelToastereD.o PixelToasterWrapper.o PixelToaster
 
 /opt/dmd2/dmd/linux/bin/dmd -release -c examples/Image.d -ofexamples/Image.o
 g++ -O3 examples/Image.o PixelToastereD.o PixelToasterWrapper.o PixelToasterCPP.o -lstdc++ -lrt -lX11 -L/opt/dmd2/dmd/linux/lib -lphobos2 -o examples/Image
+
+/opt/dmd2/dmd/linux/bin/dmd -release -c examples/KeyaboardAndMouse.d -ofexamples/KeyaboardAndMouse.o
+g++ -O3 examples/KeyaboardAndMouse.o PixelToastereD.o PixelToasterWrapper.o PixelToasterCPP.o -lstdc++ -lrt -lX11 -L/opt/dmd2/dmd/linux/lib -lphobos2 -o examples/KeyaboardAndMouse
