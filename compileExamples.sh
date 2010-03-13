@@ -16,3 +16,6 @@ g++ -O3 examples/Fullscreen.o PixelToastereD.o PixelToasterWrapper.o PixelToaste
 
 /opt/dmd2/dmd/linux/bin/dmd -release -c examples/TrueColor.d -ofexamples/TrueColor.o
 g++ -O3 examples/TrueColor.o PixelToastereD.o PixelToasterWrapper.o PixelToasterCPP.o -lstdc++ -lrt -lX11 -L/opt/dmd2/dmd/linux/lib -lphobos2 -o examples/TrueColor
+
+/opt/dmd2/dmd/linux/bin/dmd -release -c examples/Image.d -ofexamples/Image.o
+g++ -O3 examples/Image.o PixelToastereD.o PixelToasterWrapper.o PixelToasterCPP.o -lstdc++ -lrt -lX11 -L/opt/dmd2/dmd/linux/lib -lphobos2 -o examples/Image
