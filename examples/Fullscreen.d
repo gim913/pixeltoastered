@@ -1,18 +1,18 @@
-module Fullscreen;
+module examples.Fullscreen;
 
 // Fullscreen Example.
 // Opens a display for fullscreen output in floating point color mode.
-// Part of the PixelToaster Framebuffer Library - http://www.pixeltoaster.com
 
 import PixelToastereD;
 
 const int width = 640;
 const int height = 480;
 
-int main()
-{
+alias FloatingPointPixel Pixel;
+
+int main() {
     auto display = new Display("Fullscreen Example\0".ptr, width, height, Output.Fullscreen);
-    FloatingPointPixel pixels[width * height];
+    Pixel pixels[width * height];
 
     while (display.open()) {
         size_t index = 0;

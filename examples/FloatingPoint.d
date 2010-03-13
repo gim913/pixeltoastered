@@ -1,17 +1,18 @@
-module FloatingPoint;
+module examples.FloatingPoint;
 
 // Floating Point Color.
 // Pixels are float r,g,b,a values automatically clamped in range [0,1]
-// Part of the PixelToaster Framebuffer Library - http://www.pixeltoaster.com
 
 import PixelToastereD;
 
 const int width = 640;
 const int height = 480;
 
+alias FloatingPointPixel Pixel;
+
 int main() {
     auto display = new Display("Floating Point Example\0".ptr, width, height );
-    FloatingPointPixel pixels[width * height];
+    Pixel pixels[width * height];
 
     while ( display.open() ) {
         size_t index = 0;
