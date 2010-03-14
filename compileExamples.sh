@@ -38,3 +38,5 @@ dmd -release -version=UseDListener -c examples/PlasmaEffect.d -ofexamples/Plasma
 ${LINK} ${LINK_OUT}examples/PlasmaEffect examples/PlasmaEffect.o PixelToastereD.o PixelToasterWrapper.o PixelToasterCPP.o ${LINK_OPTS} 
 
 
+dmd -release -c examples/Timer.d -ofexamples/Timer.o
+${LINK} ${LINK_OUT}examples/Timer examples/Timer.o PixelToastereD.o PixelToasterWrapper.o PixelToasterCPP.o ${LINK_OPTS} 

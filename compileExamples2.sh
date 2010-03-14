@@ -25,3 +25,5 @@ ${LINK} -release -version=UseDListener -ofexamples/KeyaboardAndMouseD examples/K
 ${LINK} -release -version=UseDListener -ofexamples/MultiDisplay examples/MultiDisplay.d PixelToastereD.d PixelToasterWrapper.o PixelToasterCPP.o ${LINK_OPTS} 
 
 ${LINK} -release -version=UseDListener -ofexamples/PlasmaEffect examples/PlasmaEffect.d PixelToastereD.d PixelToasterWrapper.o PixelToasterCPP.o ${LINK_OPTS} 
+
+${LINK} -release -version=UseDListener -ofexamples/Timer examples/Timer.d PixelToastereD.d PixelToasterWrapper.o PixelToasterCPP.o ${LINK_OPTS} 
