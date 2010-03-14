@@ -1,5 +1,9 @@
 module examples.Fullscreen;
 
+// this example is a D port of similar example from pixeltoaster library
+// this example as original pixeltoaster's examples can be redistributed
+// using BSD-style license, see license-notice.txt for information
+
 // Fullscreen Example.
 // Opens a display for fullscreen output in floating point color mode.
 

@@ -1,5 +1,9 @@
 module examples.TrueColor;
 
+// this example is a D port of similar example from pixeltoaster library
+// this example as original pixeltoaster's examples can be redistributed
+// using BSD-style license, see license-notice.txt for information
+
 // TrueColor Example
 // How to open a display in truecolor mode and work with 32 bit integer pixels.
 

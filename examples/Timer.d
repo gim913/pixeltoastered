@@ -1,5 +1,9 @@
 module examples.Timer;
 
+// this example is a D port of similar example from pixeltoaster library
+// this example as original pixeltoaster's examples can be redistributed
+// using BSD-style license, see license-notice.txt for information
+
 // Timer Example
 // D port of original example by:
 // Copyright (c) 2004-2007 Glenn Fiedler

@@ -1,5 +1,9 @@
 module examples.MultiDisplay;
 
+// this example is a D port of similar example from pixeltoaster library
+// this example as original pixeltoaster's examples can be redistributed
+// using BSD-style license, see license-notice.txt for information
+
 // Multiple Displays Example.
 // Demonstrates how to open and update multiple displays.
 

@@ -1,5 +1,9 @@
 module examples.Image;
 
+// this example is a D port of similar example from pixeltoaster library
+// this example as original pixeltoaster's examples can be redistributed
+// using BSD-style license, see license-notice.txt for information
+
 // Image example
 // Demonstrates how to load and display a TGA image
 

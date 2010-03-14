@@ -1,5 +1,9 @@
 module examples.KeyboardAndMouseD;
 
+// this example is a D port of similar example from pixeltoaster library
+// this example as original pixeltoaster's examples can be redistributed
+// using BSD-style license, see license-notice.txt for information
+
 // Keyboard and Mouse Example
 // How to get keyboard and mouse events from a display
 
