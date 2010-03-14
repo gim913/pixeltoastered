@@ -7,7 +7,8 @@ import PixelToastereD;
 
 import std.stdio;
 
-class ExampleListener : Listener {
+class ExampleListener : protected Listener {
+protected:
     override
     bool defaultKeyHandlers() const {
         return true;
