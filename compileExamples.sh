@@ -33,3 +33,8 @@ ${LINK} ${LINK_OUT}examples/KeyaboardAndMouseD examples/KeyaboardAndMouseD.o Pix
 
 dmd -release -version=UseDListener -c examples/MultiDisplay.d -ofexamples/MultiDisplay.o
 ${LINK} ${LINK_OUT}examples/MultiDisplay examples/MultiDisplay.o PixelToastereD.o PixelToasterWrapper.o PixelToasterCPP.o ${LINK_OPTS} 
+
+dmd -release -version=UseDListener -c examples/PlasmaEffect.d -ofexamples/PlasmaEffect.o
+${LINK} ${LINK_OUT}examples/PlasmaEffect examples/PlasmaEffect.o PixelToastereD.o PixelToasterWrapper.o PixelToasterCPP.o ${LINK_OPTS} 
+
+
