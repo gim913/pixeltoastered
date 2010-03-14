@@ -1,0 +1,55 @@
+diff -urN pixeltoaster-read-only-orig/PixelToaster.h pixeltoaster-read-only/PixelToaster.h
+--- pixeltoaster-read-only-orig/PixelToaster.h	2010-03-14 10:19:02.000000000 +0100
++++ pixeltoaster-read-only/PixelToaster.h	2010-03-13 21:33:31.000000000 +0100
+@@ -774,9 +774,6 @@
+     class DisplayInterface
+     {
+     public:
+-
+-        virtual ~DisplayInterface() {};
+-
+         virtual bool open( const char title[], int width, int height, Output output = Output::Default, Mode mode = Mode::FloatingPoint ) = 0;
+         virtual void close() = 0;
+ 
+@@ -797,6 +794,8 @@
+ 
+ 	    virtual void wrapper( DisplayInterface * wrapper ) = 0;
+ 		virtual DisplayInterface * wrapper() = 0;
++
++        virtual ~DisplayInterface() {};
+ 	};
+ 
+     /** \brief Provides the mechanism for getting your pixels up on the screen.
+@@ -1094,12 +1093,13 @@
+     class TimerInterface
+     {
+     public:
+-        virtual ~TimerInterface() {};
+         virtual void reset() = 0;
+         virtual double time() = 0;
+         virtual double delta() = 0;
+         virtual double resolution() = 0;
+         virtual void wait( double seconds ) = 0;
++
++        virtual ~TimerInterface() {};
+     };
+ 
+     /** \brief A high resolution timer.
+@@ -1333,8 +1333,6 @@
+     class Listener
+     {
+     public:
+-
+-		virtual ~Listener() {};
+ 		
+ 		/// Called by display to ask if you want default key handlers to be applied,
+ 		/// eg. Escape quits without you needing to do anything. default is true.
+@@ -1407,6 +1405,8 @@
+ 		/// @param display the display sending the event
+ 
+ 		virtual bool onClose( DisplayInterface & display ) { return true; }
++
++		virtual ~Listener() {};
+     };
+ 
+ 	// internal converter interface
