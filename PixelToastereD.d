@@ -1,7 +1,7 @@
 module PixelToastereD;
 
 enum Output { Default, Windowed, Fullscreen }
-enum Mode { TrueColor, FloatingPoint }
+enum Mode { TrueColor, FloatingPoint, BadMode }
 
 struct FloatingPointPixel {
     float r, g, b, a;
@@ -28,6 +28,7 @@ struct Rectangle {
 
 class Display {
     IDisplay d_internal;
+	IDisplay d_cppDummy;
     Listener d_listener;
     version (UseDListener){
         ICppListener d_cppWrapper;
@@ -35,13 +36,14 @@ class Display {
     public:
     this() {
         d_internal = PixelToasterWrapper_createDisplay();
-        //d_internal.wrapper(this);
+		//d_cppDummy = new CppDummyDisplay(this);
+        //d_internal.wrapper(d_cppDummy);
     }
 
     this(const char* title, int width, int height, Output output = Output.Default, Mode mode = Mode.FloatingPoint) {
         d_internal  = PixelToasterWrapper_createDisplay();
         //d_internal.wrapper( this );
-        open( title, width, height, output, mode );
+        open(title, width, height, output, mode);
     }
 
     ~this() {
@@ -53,7 +55,7 @@ class Display {
 
     bool open(const char* title, int width, int height, Output output = Output.Default, Mode mode = Mode.FloatingPoint ) {
         if (d_internal) {
-            return d_internal.open( title, width, height, output, mode );
+            return d_internal.open(title, width, height, output, mode);
         }
         return false;
     }
@@ -85,7 +87,7 @@ class Display {
         return false;
     }
 
-    char* title() {
+    const char* title() const {
         if (d_internal) {
             return d_internal.title();
         }
@@ -217,16 +219,16 @@ version (UseDListener) {
 
     class CppListener : ICppListener { 
         public:
-            extern(C++) bool defaultKeyHandlers () const                            { return d_l.defaultKeyHandlers; }
-            extern(C++) void onKeyDown          (IDisplay display, Key key)         { d_l.onKeyDown         (display, key); }
-            extern(C++) void onKeyPressed       (IDisplay display, Key key)         { d_l.onKeyPressed      (display, key); }
-            extern(C++) void onKeyUp            (IDisplay display, Key key)         { d_l.onKeyUp           (display, key); }
-            extern(C++) void onMouseButtonDown  (IDisplay display, Mouse mouse)     { d_l.onMouseButtonDown (display, mouse); }
-            extern(C++) void onMouseButtonUp    (IDisplay display, Mouse mouse)     { d_l.onMouseButtonUp   (display, mouse); }
-            extern(C++) void onMouseMove        (IDisplay display, Mouse mouse)     { d_l.onMouseMove       (display, mouse); }
-            extern(C++) void onActivate         (IDisplay display, bool active)     { d_l.onActivate        (display, active); }
-            extern(C++) void onOpen             (IDisplay display)                  { d_l.onOpen            (display); }
-            extern(C++) bool onClose            (IDisplay display)                  { return d_l.onClose    (display); }
+            override extern(C++) bool defaultKeyHandlers () const                            { return d_l.defaultKeyHandlers; }
+            override extern(C++) void onKeyDown          (IDisplay display, Key key)         { d_l.onKeyDown         (display, key); }
+            override extern(C++) void onKeyPressed       (IDisplay display, Key key)         { d_l.onKeyPressed      (display, key); }
+            override extern(C++) void onKeyUp            (IDisplay display, Key key)         { d_l.onKeyUp           (display, key); }
+            override extern(C++) void onMouseButtonDown  (IDisplay display, Mouse mouse)     { d_l.onMouseButtonDown (display, mouse); }
+            override extern(C++) void onMouseButtonUp    (IDisplay display, Mouse mouse)     { d_l.onMouseButtonUp   (display, mouse); }
+            override extern(C++) void onMouseMove        (IDisplay display, Mouse mouse)     { d_l.onMouseMove       (display, mouse); }
+            override extern(C++) void onActivate         (IDisplay display, bool active)     { d_l.onActivate        (display, active); }
+            override extern(C++) void onOpen             (IDisplay display)                  { d_l.onOpen            (display); }
+            override extern(C++) bool onClose            (IDisplay display)                  { return d_l.onClose    (display); }
 
             this(Listener l) { d_l = l; }
         private:
@@ -237,18 +239,77 @@ version (UseDListener) {
 
     class Listener : ICppListener { 
         public:
-            extern(C++) bool defaultKeyHandlers () const                            { return true; }
-            extern(C++) void onKeyDown          (IDisplay display, Key key)         { }
-            extern(C++) void onKeyPressed       (IDisplay display, Key key)         { }
-            extern(C++) void onKeyUp            (IDisplay display, Key key)         { }
-            extern(C++) void onMouseButtonDown  (IDisplay display, Mouse mouse)     { }
-            extern(C++) void onMouseButtonUp    (IDisplay display, Mouse mouse)     { }
-            extern(C++) void onMouseMove        (IDisplay display, Mouse mouse)     { }
-            extern(C++) void onActivate         (IDisplay display, bool active)     { }
-            extern(C++) void onOpen             (IDisplay display)                  { }
-            extern(C++) bool onClose            (IDisplay display)                  { return true; }
+            override extern(C++) bool defaultKeyHandlers () const                            { return true; }
+            override extern(C++) void onKeyDown          (IDisplay display, Key key)         { }
+            override extern(C++) void onKeyPressed       (IDisplay display, Key key)         { }
+            override extern(C++) void onKeyUp            (IDisplay display, Key key)         { }
+            override extern(C++) void onMouseButtonDown  (IDisplay display, Mouse mouse)     { }
+            override extern(C++) void onMouseButtonUp    (IDisplay display, Mouse mouse)     { }
+            override extern(C++) void onMouseMove        (IDisplay display, Mouse mouse)     { }
+            override extern(C++) void onActivate         (IDisplay display, bool active)     { }
+            override extern(C++) void onOpen             (IDisplay display)                  { }
+            override extern(C++) bool onClose            (IDisplay display)                  { return true; }
     }
 }
+ 
+// not needed :P
+/+
+class CppDummyDisplay : IDisplay {
+	override extern(C++)
+	bool open(const char* title, int width, int height, Output output = Output.Default, Mode mode = Mode.FloatingPoint) {
+		return false;
+	}
+	override extern(C++)
+	void close() {
+	}
+
+	override extern(C++)
+	bool open() const {
+		return false;
+	}
+
+	override extern(C++)
+	bool update(FloatingPointPixel* pixels, Rectangle* dirtyBox = null) {
+		return true;
+	}
+
+	override extern(C++)
+	bool update(TrueColorPixel* pixels, Rectangle* dirtyBox = null) {
+		return true;
+	}
+
+	override extern(C++)
+	const char* title() const { return d_d.title(); }
+	override extern(C++)
+	void title(char* title) { d_d.title(title); }
+
+	override extern(C++)
+	int width() const { return 0; }
+	override extern(C++)
+	int height() const { return 0;}
+	override extern(C++)
+	Mode mode() const { return Mode.BadMode; }
+	override extern(C++)
+	Output output() const { return Output.Default; }
+
+	override extern(C++)
+	void listener(ICppListener listener ) {}
+	override extern(C++)
+	ICppListener listener() { return null; }
+
+	override extern(C++)
+	void wrapper(IDisplay wrapper) {
+		assert(0, "warning calling wrapper in CppDummyDisplay");
+	}
+	override extern(C++)
+	IDisplay wrapper() {
+			return this;
+	}
+
+	this(Display d) { d_d = d; }
+private:
+	Display d_d;
+}+/
 
 enum Key { // {{{
     Enter          = '\n',      ///< enter key
@@ -392,7 +453,7 @@ extern (C++) {
     }
 
     interface IDisplay {
-        bool open(const char* title, int width, int height, Output output = Output.Default, Mode mode = Mode.FloatingPoint );
+        bool open(const char* title, int width, int height, Output output = Output.Default, Mode mode = Mode.FloatingPoint);
         void close();
 
         bool open() const;
