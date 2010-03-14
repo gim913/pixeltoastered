@@ -1,4 +1,4 @@
-module examples.KeyboardAndMouse;
+module examples.KeyboardAndMouseD;
 
 // Keyboard and Mouse Example
 // How to get keyboard and mouse events from a display
@@ -8,43 +8,43 @@ import PixelToastereD;
 import std.stdio;
 
 class ExampleListener : Listener {
-    override extern(C++)
+    override
     bool defaultKeyHandlers() const {
         return true;
     }
-    override extern(C++)
+    override
     void onKeyDown(IDisplay display, Key key) { 
         write ("key down=", key, " ", getKeyString(key), "\n"); 
     }
-    override extern(C++)
+    override
     void onKeyPressed(IDisplay display, Key key) { 
         write ("key pressed=", key, " ", getKeyString(key), "\n"); 
     }
-    override extern(C++)
+    override
     void onKeyUp(IDisplay display, Key key) { 
         write ("key up=", key, " ", getKeyString(key), "\n"); 
     }
-    override extern(C++)
+    override
     void onMouseButtonDown(IDisplay display, Mouse mouse) { 
         write ("mouse down ", mouse.buttons.left?1:0, mouse.buttons.middle?1:0, mouse.buttons.right?1:0, "\n"); 
     }
-    override extern(C++)
+    override
     void onMouseButtonUp(IDisplay display, Mouse mouse) { 
         write ("mouse up ", mouse.x, ", ", mouse.y, "\n");
     }
-    override extern(C++)
+    override
     void onMouseMove(IDisplay display, Mouse mouse) { 
         write ("mouse move ", mouse.x, ", ", mouse.y, "\n"); 
     }
-    override extern(C++)
+    override
     void onActivate(IDisplay display, bool active) { 
         writefln ("activate?"); 
     }
-    override extern(C++)
+    override
     void onOpen(IDisplay display) {
         writefln ("onopen?");
     }
-    override extern(C++)
+    override
     bool onClose(IDisplay display) {
         writefln ("onclose");
         return true; 
@@ -74,7 +74,7 @@ class Application : protected Listener {
         auto foobar = new ExampleListener;
         display.listener(foobar);
 
-        if (!display.open("Keyboard and Mouse Example\0".ptr, width, height))
+        if (!display.open("Keyboard and Mouse Example (using DListener)\0".ptr, width, height))
             return 1;
 
         while (display.open()) {
@@ -96,37 +96,6 @@ class Application : protected Listener {
         return 0;
     }
 
-    protected:
-
-    override extern(C++)
-    void onKeyDown(IDisplay display, Key key) {
-        writefln ("onKeyDown: key=", key);
-    }
-
-/+
-    void onOpen( DisplayInterface & display )
-    {
-        printf( "onOpen: \"%s\", %d x %d ", display.title(), display.width(), display.height() );
-        switch ( display.mode() )
-        {
-            case Mode::TrueColor: printf( "truecolor" ); break;
-            case Mode::FloatingPoint: printf( "floating point" ); break;
-        }
-        switch ( display.output() )
-        {
-            case Output::Windowed: printf( " (windowed)\n" ); break;
-            case Output::Fullscreen: printf( " (fullscreen)\n" ); break;
-            default: break;
-        }
-    }
-
-    bool onClose( DisplayInterface & display )
-    {
-        printf( "onClose" );
-        return true;
-    }
-
-+/
 };
 
 

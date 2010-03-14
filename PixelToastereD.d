@@ -29,6 +29,9 @@ struct Rectangle {
 class Display {
     IDisplay d_internal;
     Listener d_listener;
+    version (UseDListener){
+        ICppListener d_cppWrapper;
+    }
     public:
     this() {
         d_internal = PixelToasterWrapper_createDisplay();
@@ -125,8 +128,18 @@ class Display {
 
     void listener(Listener listener) {
         if (d_internal) {
-            d_internal.listener(listener);
-            d_listener = listener;
+            version (UseDListener) {
+                d_internal.listener(null);
+                if (d_cppWrapper !is null) { delete d_cppWrapper; }
+
+                d_cppWrapper = new CppListener(listener);
+                d_internal.listener(d_cppWrapper);
+                d_listener = listener;
+
+            } else {
+                d_internal.listener(listener);
+                d_listener = listener;
+            }
         }
     }
 
@@ -188,35 +201,53 @@ class Timer { // {{{
     }
 } // }}}
 
-class DListener {
-    bool defaultKeyHandlers() const { return true; }
-    void onKeyDown(IDisplay display, Key key) {}
-    void onKeyPressed(IDisplay display, Key key) {}
-    void onKeyUp(IDisplay display, Key key) {}
-    void onMouseButtonDown(IDisplay display, Mouse mouse) {}
-    void onMouseButtonUp(IDisplay display, Mouse mouse) {}
-    void onMouseMove(IDisplay display, Mouse mouse) {}
-    void onActivate(IDisplay display, bool active) {}
-    void onOpen(IDisplay display) {}
-    bool onClose(IDisplay display) { return true; }
-}
+version (UseDListener) {
+    class Listener {
+        bool defaultKeyHandlers() const { return true; }
+        void onKeyDown(IDisplay display, Key key) {}
+        void onKeyPressed(IDisplay display, Key key) {}
+        void onKeyUp(IDisplay display, Key key) {}
+        void onMouseButtonDown(IDisplay display, Mouse mouse) {}
+        void onMouseButtonUp(IDisplay display, Mouse mouse) {}
+        void onMouseMove(IDisplay display, Mouse mouse) {}
+        void onActivate(IDisplay display, bool active) {}
+        void onOpen(IDisplay display) {}
+        bool onClose(IDisplay display) { return true; }
+    }
 
-class Listener : ICppListener { 
-public:
-    extern(C++) bool defaultKeyHandlers() const { return true; }
-    extern(C++) void onKeyDown(IDisplay display, Key key) {}
-    extern(C++) void onKeyPressed(IDisplay display, Key key) {}
-    extern(C++) void onKeyUp(IDisplay display, Key key) {}
-    extern(C++) void onMouseButtonDown(IDisplay display, Mouse mouse) {}
-    extern(C++) void onMouseButtonUp(IDisplay display, Mouse mouse) {}
-    extern(C++) void onMouseMove(IDisplay display, Mouse mouse) {}
-    extern(C++) void onActivate(IDisplay display, bool active) {}
-    extern(C++) void onOpen(IDisplay display) {}
-    extern(C++) bool onClose(IDisplay display) { return true; }
+    class CppListener : ICppListener { 
+        public:
+            extern(C++) bool defaultKeyHandlers () const                            { return d_l.defaultKeyHandlers; }
+            extern(C++) void onKeyDown          (IDisplay display, Key key)         { d_l.onKeyDown         (display, key); }
+            extern(C++) void onKeyPressed       (IDisplay display, Key key)         { d_l.onKeyPressed      (display, key); }
+            extern(C++) void onKeyUp            (IDisplay display, Key key)         { d_l.onKeyUp           (display, key); }
+            extern(C++) void onMouseButtonDown  (IDisplay display, Mouse mouse)     { d_l.onMouseButtonDown (display, mouse); }
+            extern(C++) void onMouseButtonUp    (IDisplay display, Mouse mouse)     { d_l.onMouseButtonUp   (display, mouse); }
+            extern(C++) void onMouseMove        (IDisplay display, Mouse mouse)     { d_l.onMouseMove       (display, mouse); }
+            extern(C++) void onActivate         (IDisplay display, bool active)     { d_l.onActivate        (display, active); }
+            extern(C++) void onOpen             (IDisplay display)                  { d_l.onOpen            (display); }
+            extern(C++) bool onClose            (IDisplay display)                  { return d_l.onClose    (display); }
 
-//    this(Listener l) { d_l = l; }
-//private:
-//    Listener d_l;
+            this(Listener l) { d_l = l; }
+        private:
+            Listener d_l;
+    }
+
+} else {
+
+    class Listener : ICppListener { 
+        public:
+            extern(C++) bool defaultKeyHandlers () const                            { return true; }
+            extern(C++) void onKeyDown          (IDisplay display, Key key)         { }
+            extern(C++) void onKeyPressed       (IDisplay display, Key key)         { }
+            extern(C++) void onKeyUp            (IDisplay display, Key key)         { }
+            extern(C++) void onMouseButtonDown  (IDisplay display, Mouse mouse)     { }
+            extern(C++) void onMouseButtonUp    (IDisplay display, Mouse mouse)     { }
+            extern(C++) void onMouseMove        (IDisplay display, Mouse mouse)     { }
+            extern(C++) void onActivate         (IDisplay display, bool active)     { }
+            extern(C++) void onOpen             (IDisplay display)                  { }
+            extern(C++) bool onClose            (IDisplay display)                  { return true; }
+    }
 }
 
 enum Key { // {{{

@@ -22,3 +22,7 @@ g++ -O3 examples/Image.o PixelToastereD.o PixelToasterWrapper.o PixelToasterCPP.
 
 /opt/dmd2/dmd/linux/bin/dmd -release -c examples/KeyaboardAndMouse.d -ofexamples/KeyaboardAndMouse.o
 g++ -O3 examples/KeyaboardAndMouse.o PixelToastereD.o PixelToasterWrapper.o PixelToasterCPP.o -lstdc++ -lrt -lX11 -L/opt/dmd2/dmd/linux/lib -lphobos2 -o examples/KeyaboardAndMouse
+
+/opt/dmd2/dmd/linux/bin/dmd -release -version=UseDListener -c PixelToastereD.d
+/opt/dmd2/dmd/linux/bin/dmd -release -version=UseDListener -c examples/KeyaboardAndMouseD.d -ofexamples/KeyaboardAndMouseD.o
+g++ -O3 examples/KeyaboardAndMouseD.o PixelToastereD.o PixelToasterWrapper.o PixelToasterCPP.o -lstdc++ -lrt -lX11 -L/opt/dmd2/dmd/linux/lib -lphobos2 -o examples/KeyaboardAndMouseD
