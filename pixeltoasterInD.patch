@@ -1,7 +1,11 @@
 diff -urN pixeltoaster-read-only-orig/PixelToaster.h pixeltoaster-read-only/PixelToaster.h
---- pixeltoaster-read-only-orig/PixelToaster.h	2010-03-14 10:19:02.000000000 +0100
-+++ pixeltoaster-read-only/PixelToaster.h	2010-03-13 21:33:31.000000000 +0100
-@@ -774,9 +774,6 @@
+--- pixeltoaster-read-only-orig/PixelToaster.h	2010-03-20 14:45:36.000000000 +0100
++++ pixeltoaster-read-only/PixelToaster.h	2010-03-20 14:55:41.000000000 +0100
+@@ -770,25 +770,23 @@
+ 	PIXELTOASTER_API class Converter * requestConverter( Format source, Format destination );
+ 
+ 	// internal display interface
+-
      class DisplayInterface
      {
      public:
@@ -9,9 +13,24 @@ diff -urN pixeltoaster-read-only-orig/PixelToaster.h pixeltoaster-read-only/Pixe
 -        virtual ~DisplayInterface() {};
 -
          virtual bool open( const char title[], int width, int height, Output output = Output::Default, Mode mode = Mode::FloatingPoint ) = 0;
++		virtual bool open() const = 0;
          virtual void close() = 0;
  
-@@ -797,6 +794,8 @@
+-		virtual bool open() const = 0;
+ 
+         virtual bool update( const FloatingPointPixel pixels[], const Rectangle* dirtyBox = 0 ) = 0;
+         virtual bool update( const TrueColorPixel pixels[], const Rectangle* dirtyBox = 0 ) = 0;
+ 
+         virtual const char * title() const = 0;
+ 		virtual void title( const char title[] ) = 0;
++
+         virtual int width() const = 0;
+         virtual int height() const = 0;
++
+         virtual Mode mode() const = 0;
+         virtual Output output() const = 0;
+ 
+@@ -797,6 +795,8 @@
  
  	    virtual void wrapper( DisplayInterface * wrapper ) = 0;
  		virtual DisplayInterface * wrapper() = 0;
@@ -20,7 +39,7 @@ diff -urN pixeltoaster-read-only-orig/PixelToaster.h pixeltoaster-read-only/Pixe
  	};
  
      /** \brief Provides the mechanism for getting your pixels up on the screen.
-@@ -1094,12 +1093,13 @@
+@@ -1094,12 +1094,13 @@
      class TimerInterface
      {
      public:
@@ -35,7 +54,7 @@ diff -urN pixeltoaster-read-only-orig/PixelToaster.h pixeltoaster-read-only/Pixe
      };
  
      /** \brief A high resolution timer.
-@@ -1333,8 +1333,6 @@
+@@ -1333,8 +1334,6 @@
      class Listener
      {
      public:
@@ -44,7 +63,7 @@ diff -urN pixeltoaster-read-only-orig/PixelToaster.h pixeltoaster-read-only/Pixe
  		
  		/// Called by display to ask if you want default key handlers to be applied,
  		/// eg. Escape quits without you needing to do anything. default is true.
-@@ -1407,6 +1405,8 @@
+@@ -1407,6 +1406,8 @@
  		/// @param display the display sending the event
  
  		virtual bool onClose( DisplayInterface & display ) { return true; }
@@ -53,3 +72,16 @@ diff -urN pixeltoaster-read-only-orig/PixelToaster.h pixeltoaster-read-only/Pixe
      };
  
  	// internal converter interface
+diff -urN pixeltoaster-read-only-orig/PixelToasterUnix.h pixeltoaster-read-only/PixelToasterUnix.h
+--- pixeltoaster-read-only-orig/PixelToasterUnix.h	2010-03-20 14:45:36.000000000 +0100
++++ pixeltoaster-read-only/PixelToasterUnix.h	2010-03-20 19:23:38.000000000 +0100
+@@ -14,6 +14,9 @@
+ #include <X11/Xutil.h>
+ #include <X11/keysymdef.h>
+ 
++#include <cstdlib>
++#include <cstdio>
++
+ namespace PixelToaster
+ {
+ 	template <typename T>

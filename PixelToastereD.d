@@ -17,8 +17,17 @@ You should have received a copy of the GNU General Public License
 along with PixelToastereD.  If not, see <http://www.gnu.org/licenses/>.
 +/
 
+
 enum Output { Default, Windowed, Fullscreen }
 enum Mode { TrueColor, FloatingPoint, BadMode }
+
+struct ModeCPP {
+	Mode val;
+}
+
+struct OutputCPP {
+	Output val;
+}
 
 struct FloatingPointPixel {
     float r, g, b, a;
@@ -45,7 +54,7 @@ struct Rectangle {
 
 class Display {
     IDisplay d_internal;
-	IDisplay d_cppDummy;
+    IDisplay d_cppDummy;
     Listener d_listener;
     version (UseDListener){
         ICppListener d_cppWrapper;
@@ -53,12 +62,18 @@ class Display {
     public:
     this() {
         d_internal = PixelToasterWrapper_createDisplay();
+	if (d_internal is null) {
+		throw new Exception("cannor create display object, is pixeltoaster.dll present?");
+	}
 		//d_cppDummy = new CppDummyDisplay(this);
         //d_internal.wrapper(d_cppDummy);
     }
 
     this(const char* title, int width, int height, Output output = Output.Default, Mode mode = Mode.FloatingPoint) {
         d_internal  = PixelToasterWrapper_createDisplay();
+	if (d_internal is null) {
+		throw new Exception("cannor create display object, is pixeltoaster.dll present?");
+	}
         //d_internal.wrapper( this );
         open(title, width, height, output, mode);
     }
@@ -72,7 +87,8 @@ class Display {
 
     bool open(const char* title, int width, int height, Output output = Output.Default, Mode mode = Mode.FloatingPoint ) {
         if (d_internal) {
-            return d_internal.open(title, width, height, output, mode);
+
+            return d_internal.open(title, width, height, OutputCPP(output), ModeCPP(mode));
         }
         return false;
     }
@@ -92,7 +108,7 @@ class Display {
 
     bool update(FloatingPointPixel* pixels, Rectangle* dirtyBox = null) {
         if (d_internal) {
-            return d_internal.update( pixels, dirtyBox );
+            return d_internal.update(pixels, dirtyBox);
         }
         return false;
     }
@@ -133,14 +149,16 @@ class Display {
 
     Mode mode() {
         if (d_internal) {
-            return d_internal.mode();
+            ModeCPP m = d_internal.mode();
+            return m.val;
         }
         return Mode.FloatingPoint;
     }
 
     Output output() {
         if (d_internal) {
-            return d_internal.output();
+            OutputCPP o = d_internal.output();
+            return o.val;
         }
         return Output.Default;
     }
@@ -182,8 +200,10 @@ class Timer { // {{{
     }
 
     ~this() {
-        PixelToasterWrapper_destroyTimer(cast(void*)d_internal);
-        d_internal = null;
+        if (d_internal) {
+            PixelToasterWrapper_destroyTimer(cast(void*)d_internal);
+            d_internal = null;
+        }
     }
 
     void reset() {
@@ -470,20 +490,43 @@ extern (C++) {
     }
 
     interface IDisplay {
-        bool open(const char* title, int width, int height, Output output = Output.Default, Mode mode = Mode.FloatingPoint);
+version (MSCV) {
+        bool open() const;
+        bool open(const char* title, int width, int height, OutputCPP output = OutputCPP(Output.Default), ModeCPP mode = ModeCPP(Mode.FloatingPoint));
+} else {
+        bool open(const char* title, int width, int height, OutputCPP output = OutputCPP(Output.Default), ModeCPP mode = ModeCPP(Mode.FloatingPoint));
+        bool open() const;
+}
         void close();
 
-        bool open() const;
+version(MSVC) {
+	// msvc does some crazy sh*t, in case of open() above, it always
+	// places ptrs in the vtbl in order he wants, in case of this one
+	// however, he places ptrs (to title() and update()) always swaped
+	// with what you declare o0
+        bool update(TrueColorPixel* pixels, Rectangle* dirtyBox = null);
+        bool update(FloatingPointPixel* pixels, Rectangle* dirtyBox = null);
+
+        void title(char* title);
+        const char* title() const;
+} else {
 
         bool update(FloatingPointPixel* pixels, Rectangle* dirtyBox = null);
         bool update(TrueColorPixel* pixels, Rectangle* dirtyBox = null);
 
         const char* title() const;
         void title(char* title);
+}
         int width() const;
         int height() const;
-        Mode mode() const;
-        Output output() const;
+
+version (MSVC) {
+        void mode(ref ModeCPP data) const;
+        void output(ref OutputCPP data) const;
+} else {
+        ModeCPP mode() const;
+        OutputCPP output() const;
+}
 
         void listener(ICppListener listener );
         ICppListener listener() const;
