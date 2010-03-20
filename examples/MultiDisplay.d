@@ -46,7 +46,8 @@ int main() {
         disp.open(t[idx], width, height);
     }
 
-    Pixel[width*height] pixels;
+    Pixel[] pixels;
+    pixels.length = width*height;
 
     while (d[0].open || d[1].open || d[2].open) {
         size_t index = 0;

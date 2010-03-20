@@ -16,7 +16,8 @@ alias TrueColorPixel Pixel;
 
 int main() {
     auto display = new Display("TrueColor Example\0".ptr, width, height, Output.Default, Mode.TrueColor);
-    Pixel pixels[width * height];
+    Pixel[] pixels;
+    pixels.length = width * height;
 
     while (display.open()) {
         size_t index = 0;

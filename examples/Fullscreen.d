@@ -16,7 +16,8 @@ alias FloatingPointPixel Pixel;
 
 int main() {
     auto display = new Display("Fullscreen Example\0".ptr, width, height, Output.Fullscreen);
-    Pixel pixels[width * height];
+    Pixel[] pixels;
+    pixels.length = width * height;
 
     while (display.open()) {
         size_t index = 0;

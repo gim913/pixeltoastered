@@ -15,8 +15,9 @@ const int height = 480;
 alias FloatingPointPixel Pixel;
 
 int main() {
-    auto display = new Display("Floating Point Example\0".ptr, width, height );
-    Pixel pixels[width * height];
+    auto display = new Display("Floating Point Example\0".ptr, width, height);
+    Pixel[] pixels;
+    pixels.length = width * height;
 
     while ( display.open() ) {
         size_t index = 0;

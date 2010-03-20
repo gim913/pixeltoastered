@@ -17,7 +17,7 @@ int main() {
     int width, height;
     Pixel[] pixels;
 
-    pixels = load([ "ExampleImage.tga", "../ExampleImage.tga" ], width, height);
+    pixels = load([ "ExampleImage.tga", "../ExampleImage.tga", "examples/ExampleImage.tga" ], width, height);
     if (pixels is null) {
         write ("couldn't load file\n");
         return 1;
@@ -47,7 +47,7 @@ Pixel[] load(string[] names, ref int width, ref int height) {
 Pixel[] realLoad(string filename, ref int width, ref int height)
 {
     scope file = new File(filename);
-
+	
     TgaHeader  header;
     file.readExact(cast(void*)(&header), header.sizeof);
 
