@@ -2,3 +2,4 @@ syntax: glob
 *~
 *.o
 pixeltoaster-read-only
+pixeltoaster-read-only-orig

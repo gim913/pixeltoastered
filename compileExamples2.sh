@@ -8,7 +8,7 @@ LINK=dmd
 LINK_OPTS="-L-lstdc++ -L-lrt -L-lX11"
 
 g++ -O3 -DPLATFORM_UNIX -DPIXELTOASTER_TINY -c ${PIXEL_LOC}/PixelToaster.cpp -o PixelToasterCPP.o -fdump-class-hierarchy
-g++ -O3 -I${PIXEL_LOC} -c PixelToasterWrapper.cpp
+g++ -O3 -DPLATFORM_UNIX -I${PIXEL_LOC} -c PixelToasterWrapper.cpp
 
 ${LINK} -release -ofexamples/FloatingPoint examples/FloatingPoint.d PixelToastereD.d PixelToasterWrapper.o PixelToasterCPP.o ${LINK_OPTS}
 

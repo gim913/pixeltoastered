@@ -8,7 +8,7 @@ LINK_OPTS="-lstdc++ -lrt -lX11 -L/opt/dmd2/dmd/linux/lib -lphobos2"
 LINK_OUT="-o"
 
 g++ -O3 -DPLATFORM_UNIX -DPIXELTOASTER_TINY -c ${PIXEL_LOC}/PixelToaster.cpp -o PixelToasterCPP.o
-g++ -O3 -I${PIXEL_LOC} -c PixelToasterWrapper.cpp
+g++ -O3 -DPLATFORM_UNIX -I${PIXEL_LOC} -c PixelToasterWrapper.cpp
 
 dmd -release -c PixelToastereD.d
 

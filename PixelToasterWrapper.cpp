@@ -122,7 +122,7 @@ class ITimer {
 
 IDisplay* PixelToasterWrapper_createDisplay()
 {
-#if defined(PLATFORM_LINUX)
+#if defined(PLATFORM_UNIX)
 	PixelToaster::DisplayInterface* ptr = PixelToaster::createDisplay();
 #elif defined(PLATFORM_WINDOWS)
 	if (retrievePointers()) {
@@ -141,7 +141,7 @@ void PixelToasterWrapper_destroyDisplay(void* d)
 
 ITimer* PixelToasterWrapper_createTimer()
 {
-#if defined(PLATFORM_LINUX)
+#if defined(PLATFORM_UNIX)
 	PixelToaster::TimerInterface* ptr = PixelToaster::createTimer();
 #elif defined(PLATFORM_WINDOWS)
 	if (retrievePointers()) {
