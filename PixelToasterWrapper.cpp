@@ -11,6 +11,60 @@ typedef PixelToaster::TimerInterface* (*CreateTimerDef)();
 CreateDisplayDef createDisplayPtr = NULL;
 CreateTimerDef createTimerPtr = NULL;
 
+int retrievePointers();
+#endif
+
+class IDisplay {
+	public:
+		virtual void foobar();
+};
+
+class ITimer { 
+	public:
+		virtual void foobar();
+};
+
+IDisplay* PixelToasterWrapper_createDisplay()
+{
+#if defined(PLATFORM_UNIX)
+	PixelToaster::DisplayInterface* ptr = PixelToaster::createDisplay();
+#elif defined(PLATFORM_WINDOWS)
+	if (retrievePointers()) {
+		return NULL;
+	}
+	PixelToaster::DisplayInterface* ptr = (*createDisplayPtr)();
+#endif
+	return (IDisplay*)ptr;
+}
+
+void PixelToasterWrapper_destroyDisplay(void* d)
+{
+	PixelToaster::DisplayInterface* r = (PixelToaster::DisplayInterface*)d;
+	delete r;
+}
+
+ITimer* PixelToasterWrapper_createTimer()
+{
+#if defined(PLATFORM_UNIX)
+	PixelToaster::TimerInterface* ptr = PixelToaster::createTimer();
+#elif defined(PLATFORM_WINDOWS)
+	if (retrievePointers()) {
+		return NULL;
+	}
+	PixelToaster::TimerInterface* ptr = (*createTimerPtr)();
+#endif
+	return (ITimer*)ptr;
+}
+
+void PixelToasterWrapper_destroyTimer(void* d)
+{
+	PixelToaster::TimerInterface* r = (PixelToaster::TimerInterface*)d;
+	delete r;
+}
+
+
+
+#if defined(PLATFORM_WINDOWS)
 int retrievePointers() {
 	if (! hLib) {
 		hLib = LoadLibrary("pixeltoaster.dll");
@@ -109,51 +163,3 @@ int retrievePointers() {
 	return 1;
 }
 #endif
-
-class IDisplay {
-	public:
-		virtual void foobar();
-};
-
-class ITimer { 
-	public:
-		virtual void foobar();
-};
-
-IDisplay* PixelToasterWrapper_createDisplay()
-{
-#if defined(PLATFORM_UNIX)
-	PixelToaster::DisplayInterface* ptr = PixelToaster::createDisplay();
-#elif defined(PLATFORM_WINDOWS)
-	if (retrievePointers()) {
-		return NULL;
-	}
-	PixelToaster::DisplayInterface* ptr = (*createDisplayPtr)();
-#endif
-	return (IDisplay*)ptr;
-}
-
-void PixelToasterWrapper_destroyDisplay(void* d)
-{
-	PixelToaster::DisplayInterface* r = (PixelToaster::DisplayInterface*)d;
-	delete r;
-}
-
-ITimer* PixelToasterWrapper_createTimer()
-{
-#if defined(PLATFORM_UNIX)
-	PixelToaster::TimerInterface* ptr = PixelToaster::createTimer();
-#elif defined(PLATFORM_WINDOWS)
-	if (retrievePointers()) {
-		return NULL;
-	}
-	PixelToaster::TimerInterface* ptr = (*createTimerPtr)();
-#endif
-	return (ITimer*)ptr;
-}
-
-void PixelToasterWrapper_destroyTimer(void* d)
-{
-	PixelToaster::TimerInterface* r = (PixelToaster::TimerInterface*)d;
-	delete r;
-}
