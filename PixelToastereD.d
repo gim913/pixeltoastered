@@ -502,46 +502,51 @@ extern (C++) {
     }
 
     interface IDisplay {
+        // msvc does some crazy sh*t, in case of overloaded functions 
+        // it seems it always places ptrs in vtbl swaped with what you
+        // declare o0
         version (MSVC) {
             bool open() const;
             bool open(const char* title, int width, int height, OutputCPP output = OutputCPP(Output.Default), ModeCPP mode = ModeCPP(Mode.FloatingPoint));
-        } else {
-            bool open(const char* title, int width, int height, OutputCPP output = OutputCPP(Output.Default), ModeCPP mode = ModeCPP(Mode.FloatingPoint));
-            bool open() const;
-        }
-        void close();
 
-        version(MSVC) {
-            // msvc does some crazy sh*t, in case of open() above, it always
-            // places ptrs in the vtbl in order he wants, in case of this one
-            // however, he places ptrs (to title() and update()) always swaped
-            // with what you declare o0
+            void close();
+
             bool update(TrueColorPixel* pixels, Rectangle* dirtyBox = null);
             bool update(FloatingPointPixel* pixels, Rectangle* dirtyBox = null);
 
             void title(char* title);
             const char* title() const;
-        } else {
 
-            bool update(FloatingPointPixel* pixels, Rectangle* dirtyBox = null);
-            bool update(TrueColorPixel* pixels, Rectangle* dirtyBox = null);
+            int width() const;
+            int height() const;
 
-            const char* title() const;
-            void title(char* title);
-        }
-        int width() const;
-        int height() const;
-
-        version (MSVC) {
             void mode(ref ModeCPP data) const;
             void output(ref OutputCPP data) const;
+
+            ICppListener listener() const;
+            void listener(ICppListener listener );
+
         } else {
+            bool open(const char* title, int width, int height, OutputCPP output = OutputCPP(Output.Default), ModeCPP mode = ModeCPP(Mode.FloatingPoint));
+            bool open() const;
+
+            void close();
+
+            bool update(FloatingPointPixel* pixels, Rectangle* dirtyBox = null);
+            bool update(TrueColorPixel* pixels, Rectangle* dirtyBox = null);
+
+            const char* title() const;
+            void title(char* title);
+
+            int width() const;
+            int height() const;
+
             ModeCPP mode() const;
             OutputCPP output() const;
-        }
 
-        void listener(ICppListener listener );
-        ICppListener listener() const;
+            void listener(ICppListener listener );
+            ICppListener listener() const;
+        }
 
         void wrapper(IDisplay wrapper);
         IDisplay wrapper();
