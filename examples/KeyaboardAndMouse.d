@@ -19,39 +19,48 @@ protected:
     }
     override extern(C++)
     void onKeyDown(IDisplay display, Key key) { 
-        write ("key down=", key, " ", getKeyString(key), "\n"); 
+        writeln ("key down=", key, " ", getKeyString(key));
+        stdout.flush();
     }
     override extern(C++)
     void onKeyPressed(IDisplay display, Key key) { 
-        write ("key pressed=", key, " ", getKeyString(key), "\n"); 
+        writeln ("key pressed=", key, " ", getKeyString(key));
+        stdout.flush();
     }
     override extern(C++)
     void onKeyUp(IDisplay display, Key key) { 
-        write ("key up=", key, " ", getKeyString(key), "\n"); 
+        writeln ("key up=", key, " ", getKeyString(key));
+        stdout.flush();
     }
     override extern(C++)
     void onMouseButtonDown(IDisplay display, Mouse mouse) { 
-        write ("mouse down ", mouse.buttons.left?1:0, mouse.buttons.middle?1:0, mouse.buttons.right?1:0, "\n"); 
+        writeln ("mouse down ", mouse.buttons.left?1:0, mouse.buttons.middle?1:0, mouse.buttons.right?1:0);
+        stdout.flush();
     }
     override extern(C++)
     void onMouseButtonUp(IDisplay display, Mouse mouse) { 
-        write ("mouse up ", mouse.x, ", ", mouse.y, "\n");
+        writeln ("mouse up ", mouse.x, ", ", mouse.y);
+        stdout.flush();
     }
     override extern(C++)
     void onMouseMove(IDisplay display, Mouse mouse) { 
-        write ("mouse move ", mouse.x, ", ", mouse.y, "\n"); 
+        writeln ("mouse move ", mouse.x, ", ", mouse.y);
+        stdout.flush();
     }
     override extern(C++)
     void onActivate(IDisplay display, bool active) { 
-        writefln ("activate?"); 
+        writeln ("activate?"); 
+        stdout.flush();
     }
     override extern(C++)
     void onOpen(IDisplay display) {
-        writefln ("onopen?");
+        writeln ("onopen?");
+        stdout.flush();
     }
     override extern(C++)
     bool onClose(IDisplay display) {
-        writefln ("onclose");
+        writeln ("onclose");
+        stdout.flush();
         return true; 
     }
 }
@@ -59,13 +68,15 @@ protected:
 class Application : protected Listener {
     static const int width = 640;
     static const int height = 480;
-    Display display;
+    IDisplay display;
 
     alias FloatingPointPixel Pixel;
     Pixel[width*height] pixels;
 
     static Application _inst;
-    this() { display = new Display; }
+    this() {
+		display = PixelToasterWrapper_createDisplay();//new Display;
+	}
 
     public:
     static Application getInstance() { 

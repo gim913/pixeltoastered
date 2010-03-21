@@ -20,19 +20,22 @@ alias FloatingPointPixel Pixel;
 class MultiDisplayListener : protected Listener {
 protected:
     void onOpen(IDisplay display) {
-		const char* t = display.title();
-        write("open: ", t[0 .. strlen(t)], "\n");
+        const char* t = display.title();
+        writeln ("open: ", t[0 .. strlen(t)]);
+        stdout.flush();
     }
 
     bool onClose(IDisplay display) {
-		const char* t = display.title();
-        write("close: ", t[0 .. strlen(t)], "\n");
+        const char* t = display.title();
+        writeln ("close: ", t[0 .. strlen(t)]);
+        stdout.flush();
         return true;
     }
 
     void onMouseMove(IDisplay display, Mouse mouse) {
-		const char* t = display.title();
-        write (t[0 .. strlen(t)], "mouse move (", mouse.x, ",",mouse.y, ")\n"); 
+        const char* t = display.title();
+        writeln  (t[0 .. strlen(t)], "mouse move (", mouse.x, ",",mouse.y, ")\n"); 
+        stdout.flush();
     }
 }
 
